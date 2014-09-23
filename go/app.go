@@ -186,8 +186,6 @@ func getUser(w http.ResponseWriter, r *http.Request, dbConn *sql.DB, session *se
 	user := &User{}
 	user.Id = userId.(int)
 	user.Username = session.Values["username"].(string)
-	user.Salt = session.Values["salf"].(string)
-	user.LastAccess = session.Values["lastAccess"].(string)
 
 	if user != nil {
 		w.Header().Add("Cache-Control", "private")
@@ -389,8 +387,6 @@ func signinPostHandler(w http.ResponseWriter, r *http.Request) {
 		if user.Password == fmt.Sprintf("%x", h.Sum(nil)) {
 			session.Values["user_id"] = user.Id
 			session.Values["username"] = user.Username
-			session.Values["salt"] = user.Salt
-			session.Values["last_access"] = user.LastAccess
 			session.Values["token"] = fmt.Sprintf("%x", securecookie.GenerateRandomKey(32))
 			if err := session.Save(r, w); err != nil {
 				serverError(w, err)
