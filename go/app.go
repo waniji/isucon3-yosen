@@ -2,6 +2,7 @@ package main
 
 import (
 	"./sessions"
+//	"github.com/waniji/isucon3-yosen/go/sessions"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/json"
@@ -227,7 +228,7 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUser(w, r, dbConn, session)
 
 	var totalCount int
-	rows, err := dbConn.Query("SELECT count(*) AS c FROM memos WHERE is_private=0")
+	rows, err := dbConn.Query("SELECT count(id) AS c FROM memos WHERE is_private=0")
 	if err != nil {
 		serverError(w, err)
 		return
@@ -286,7 +287,7 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	page, _ := strconv.Atoi(vars["page"])
 
-	rows, err := dbConn.Query("SELECT count(*) AS c FROM memos WHERE is_private=0")
+	rows, err := dbConn.Query("SELECT count(id) AS c FROM memos WHERE is_private=0")
 	if err != nil {
 		serverError(w, err)
 		return
